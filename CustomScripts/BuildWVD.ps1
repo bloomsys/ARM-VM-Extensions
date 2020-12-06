@@ -1,11 +1,12 @@
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 # Partition & Format the data disk	
 # First we’ll scan the system for disks that are available for use in a storage pool, and write the array to the $PhysicalDisks variable
-$PhysicalDisks = Get-StorageSubSystem -FriendlyName "Storage Spaces*" | Get-PhysicalDisk -CanPool $True
+$PhysicalDisks = Get-StorageSubSystem -FriendlyName "Windows Storage*" | Get-PhysicalDisk -CanPool $True
 # Create a new storage pool StoragePool1 and add the available disks ($PhysicalDisks)
-New-StoragePool -FriendlyName StoragePool1 -StorageSubsystemFriendlyName "Storage Spaces*" -PhysicalDisks $PhysicalDisks
+New-StoragePool -FriendlyName StoragePool1 -StorageSubsystemFriendlyName "Windows Storage*" -PhysicalDisks $PhysicalDisks
 # Thin provisioning allows me to specify a larger capacity, and add extra disk space later as needed
-New-VirtualDisk –FriendlyName VirtualDisk1 -Size 50GB –StoragePoolFriendlyName StoragePool1 -ProvisioningType Thin
+#New-VirtualDisk –FriendlyName VirtualDisk1 -Size 50GB –StoragePoolFriendlyName StoragePool1 -ProvisioningType Thin
+New-VirtualDisk -StoragePoolFriendlyName PlanetData -FriendlyName BusinessCritical -ResiliencySettingName Mirror -NumberOfDataCopies 3 -Size 50GB -ProvisioningType Thin
 # Initialize the disk, create a new volume and format it
 Initialize-Disk -VirtualDisk (Get-VirtualDisk -FriendlyName VirtualDisk1) -passthru | New-Partition -AssignDriveLetter -UseMaximumSize | Format-Volume
 # Install PowerShell-Core 7
