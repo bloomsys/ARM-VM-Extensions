@@ -6,6 +6,9 @@ $PhysicalDisks = Get-StorageSubSystem -FriendlyName "Windows Storage*" | Get-Phy
 New-StoragePool -FriendlyName StoragePool1 -StorageSubsystemFriendlyName "Windows Storage*" -PhysicalDisks $PhysicalDisks
 # Thin provisioning allows me to specify a larger capacity, and add extra disk space later as needed
 #New-VirtualDisk –FriendlyName VirtualDisk1 -Size 50GB –StoragePoolFriendlyName StoragePool1 -ProvisioningType Thin
+#  This example creates a 50 GB thinly-provisioned virtual disk on the Windows Storage subsystem, using the Mirror
+#    resiliency setting with three data copies. This creates a three-way mirror that is capable of tolerating two disk
+#    failures).
 New-VirtualDisk -StoragePoolFriendlyName PlanetData -FriendlyName BusinessCritical -ResiliencySettingName Mirror -NumberOfDataCopies 3 -Size 50GB -ProvisioningType Thin
 # Initialize the disk, create a new volume and format it
 Initialize-Disk -VirtualDisk (Get-VirtualDisk -FriendlyName VirtualDisk1) -passthru | New-Partition -AssignDriveLetter -UseMaximumSize | Format-Volume
