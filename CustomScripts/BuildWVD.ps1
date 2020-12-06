@@ -16,3 +16,7 @@ Initialize-Disk -VirtualDisk (Get-VirtualDisk -FriendlyName VirtualDisk1) -passt
 choco install powershell-core -y
 # Instal Azure Data Studio
 choco install azure-data-studio -y
+# Enable the Windows Subsystem for Linux
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+# Enable Virtual Machine feature
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
