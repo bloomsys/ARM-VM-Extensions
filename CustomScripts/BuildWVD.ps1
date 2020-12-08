@@ -5,7 +5,7 @@ $PhysicalDisks = Get-StorageSubSystem -FriendlyName "Windows Storage*" | Get-Phy
 # Create a new storage pool StoragePool1 and add the available disks ($PhysicalDisks)
 New-StoragePool -FriendlyName StoragePool1 -StorageSubsystemFriendlyName "Windows Storage*" -PhysicalDisks $PhysicalDisks
 # Thin provisioning allows me to specify a larger capacity, and add extra disk space later as needed
-New-VirtualDisk -FriendlyName VirtualDisk1 -Size 50GB -StoragePoolFriendlyName StoragePool1 -ProvisioningType Thin
+New-VirtualDisk -FriendlyName VirtualDisk1 -Size 10GB -StoragePoolFriendlyName StoragePool1 -ProvisioningType Thin
 # Initialize the disk, create a new volume and format it
 Initialize-Disk -VirtualDisk (Get-VirtualDisk -FriendlyName VirtualDisk1) -passthru | New-Partition -AssignDriveLetter -UseMaximumSize | Format-Volume
 # Install PowerShell-Core 7
